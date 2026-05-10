@@ -16,8 +16,6 @@ The landing page shows real-time stats — DIDs created, active connections, iss
 ### Decentralized Identifiers (DIDs)
 Create PRISM DIDs with an optional alias. Each DID appears in a table with its status (`Draft` / `Published`), creation date, and action buttons to **Resolve** (fetch DID Document) or **Publish** (anchor on Cardano via CIP-30 wallet).
 
-![DIDs Page — Empty State](screenshots/dids-page.png)
-
 ![DIDs Page — DID Created](screenshots/dids-created.png)
 
 ### Connections (DIDComm v2)
@@ -37,8 +35,6 @@ Submit a credential presentation (JWT VP or SD-JWT) for verification. Specify th
 
 ### Settings — Edge / Cloud Toggle
 Switch between **Edge mode** (offline-first, browser-only, SDK runs in WASM) and **Cloud mode** (connected to a Cloud Agent REST API). The endpoint persists in `localStorage`.
-
-![Settings — Edge Mode]()
 
 ![Settings — Cloud Mode](screenshots/settings-cloud.png)
 
