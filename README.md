@@ -4,6 +4,46 @@ A web dashboard for [Hyperledger Identus](https://github.com/hyperledger-identus
 
 The portal works without any backend by default - the Edge Agent runs entirely in the browser and pairs with a CIP-30 Cardano wallet (MeshSDK) for PRISM operations. Set `VITE_CLOUD_AGENT_API_ENDPOINT` and the same UI talks to a Cloud Agent over REST instead. Switching modes is a one-click thing in Settings.
 
+---
+
+## Screenshots
+
+### Overview Dashboard
+The landing page shows real-time stats — DIDs created, active connections, issued credentials, and wallet status. The current agent mode (Edge/Cloud) is displayed with a quick-switch link.
+
+![Overview Dashboard](screenshots/overview.png)
+
+### Decentralized Identifiers (DIDs)
+Create PRISM DIDs with an optional alias. Each DID appears in a table with its status (`Draft` / `Published`), creation date, and action buttons to **Resolve** (fetch DID Document) or **Publish** (anchor on Cardano via CIP-30 wallet).
+
+![DIDs Page — Empty State](screenshots/dids-page.png)
+
+![DIDs Page — DID Created](screenshots/dids-created.png)
+
+### Connections (DIDComm v2)
+Bootstrap peer connections using **Out-of-Band invitations**. Generate an OOB URL (renders as a QR code for mobile wallet scanning) or accept an inbound invitation from another agent.
+
+![Connections Page](screenshots/connections.png)
+
+### Credentials
+Issue JWT, SD-JWT, AnonCreds, or W3C-LD verifiable credentials. Credentials are stored in the agent and can be presented over DIDComm.
+
+![Credentials Page](screenshots/credentials.png)
+
+### Verification
+Submit a credential presentation (JWT VP or SD-JWT) for verification. Specify the verifier DID and required claims — the agent checks the signature and temporal validity.
+
+![Verify Page](screenshots/verify.png)
+
+### Settings — Edge / Cloud Toggle
+Switch between **Edge mode** (offline-first, browser-only, SDK runs in WASM) and **Cloud mode** (connected to a Cloud Agent REST API). The endpoint persists in `localStorage`.
+
+![Settings — Edge Mode](screenshots/settings.png)
+
+![Settings — Cloud Mode](screenshots/settings-cloud.png)
+
+---
+
 ## Layout
 
 ```
@@ -21,8 +61,8 @@ The repo is an npm workspace. `app` consumes `@identus/portal-core` directly und
 ## Running it
 
 ```sh
-git clone <this repo>
-cd identus-portal
+git clone https://github.com/abhigyan1102/Identus-Identity-Portal-PoC.git
+cd Identus-Identity-Portal-PoC
 npm install
 npm run dev          # http://localhost:5173
 ```
@@ -36,7 +76,9 @@ npm run dev
 
 …or paste the endpoint into Settings inside the running app - it persists in `localStorage` and survives reloads.
 
-## How it's organized
+## Architecture
+
+### The Contract
 
 The whole architecture is one file: [`packages/identus-portal-core/src/types/agent.ts`](packages/identus-portal-core/src/types/agent.ts). Read it first; everything else is structure around it.
 
@@ -51,14 +93,38 @@ export interface IAgent {
 }
 ```
 
-Two adapters implement it:
+### Three-Layer Architecture
+
+```
+                            ┌────────────────────────────────┐
+   UI                       │     React 18 + Tailwind        │
+   (app/src/ui)             │     pages, components          │
+                            └────────────────┬───────────────┘
+                                             │ depends on IAgent only
+                            ┌────────────────┴───────────────┐
+   Adapters                 │  EdgeAgentAdapter              │
+   (app/src/adapters)       │  CloudAgentAdapter             │
+                            │  MeshCip30Wallet               │
+                            └────────────────┬───────────────┘
+                                             │ implements
+                            ┌────────────────┴───────────────┐
+   Core (pure TS)           │     IAgent, ICardanoWallet     │
+   (packages/…-core)        │     domain types, utils        │
+                            └────────────────────────────────┘
+```
+
+**Three rules govern this layout:**
+
+1. **Core never imports UI or adapters.** It's plain TypeScript with no React, no SDK, no wallet libs.
+2. **Adapters never import each other.** `EdgeAgentAdapter` and `CloudAgentAdapter` know nothing about each other.
+3. **UI never branches on mode.** No `if (mode === 'cloud')` anywhere. The component calls `agent.X()` and that's it.
+
+### Adapters
 
 - [`EdgeAgentAdapter`](app/src/adapters/edge/EdgeAgentAdapter.ts) lazily imports `@hyperledger/identus-sdk` so the bundle still loads if the SDK's WASM init misbehaves in a particular browser. State is in-memory today; Pluto + IndexedDB is the next step.
 - [`CloudAgentAdapter`](app/src/adapters/cloud/CloudAgentAdapter.ts) speaks the Cloud Agent REST API. It pings `_system/health` on `start()` and falls back to a local mock if the endpoint is unreachable, so the dashboard is always demoable from a laptop on a hotel Wi-Fi.
 
 CIP-30 wallets sit behind a separate [`ICardanoWallet`](packages/identus-portal-core/src/types/wallet.ts) contract implemented by [`MeshCip30Wallet`](app/src/adapters/wallet/MeshCip30Wallet.ts). Replacing MeshSDK with another CIP-30 lib doesn't touch any UI code.
-
-The UI never branches on mode. Every page calls `agent.X()` and works in either configuration. That's the whole point of the contract.
 
 ## What's stubbed and what's not
 
@@ -93,3 +159,9 @@ Roughly in order of value:
 React 18.3 (pinned), Vite 5, TypeScript 5.6 strict. Tailwind for styling - no shadcn/ui or Radix, just a few hand-rolled components in [`app/src/ui/components`](app/src/ui/components). MeshSDK 1.9 for CIP-30, `qrcode.react` for OOB QR rendering, `vite-plugin-node-polyfills` so the SDK's Node-isms (`crypto`, `events`, `stream`) resolve in-browser.
 
 React 18 over 19 is deliberate: matches the brief, and avoids dragging downstream consumers into the 19 transition before they're ready.
+
+## Credits
+
+- Original POC architecture by [@btwshivam](https://github.com/btwshivam)
+- [Hyperledger Identus](https://github.com/hyperledger-identus) SDK & Cloud Agent
+- [LFDT Mentorship #77](https://github.com/LF-Decentralized-Trust-Mentorships/mentorship-program/issues/77)
