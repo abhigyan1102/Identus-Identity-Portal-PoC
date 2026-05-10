@@ -157,7 +157,5 @@ React 18.3 (pinned), Vite 5, TypeScript 5.6 strict. Tailwind for styling - no sh
 React 18 over 19 is deliberate: matches the brief, and avoids dragging downstream consumers into the 19 transition before they're ready.
 
 ## Credits
-
-- Original POC architecture by [@btwshivam](https://github.com/btwshivam)
 - [Hyperledger Identus](https://github.com/hyperledger-identus) SDK & Cloud Agent
 - [LFDT Mentorship #77](https://github.com/LF-Decentralized-Trust-Mentorships/mentorship-program/issues/77)
