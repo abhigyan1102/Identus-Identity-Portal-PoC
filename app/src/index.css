@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    @apply h-full;
+  }
+  body {
+    @apply bg-stone-50 font-sans text-stone-900 antialiased;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    @apply bg-stone-900 text-stone-50;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply tracking-tightish;
+  }
+  code,
+  pre,
+  .mono {
+    @apply font-mono;
+    font-feature-settings: 'tnum', 'zero';
+  }
+  hr {
+    @apply border-stone-200;
+  }
+  input,
+  select,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+}
+
+@layer components {
+  .surface {
+    @apply rounded-lg border border-stone-200 bg-white;
+  }
+  .card {
+    @apply surface p-5;
+  }
+
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-50;
+  }
+  .btn-primary {
+    @apply btn bg-stone-900 text-white hover:bg-stone-800 active:bg-stone-950;
+    @apply disabled:cursor-not-allowed disabled:bg-stone-300;
+  }
+  .btn-ghost {
+    @apply btn bg-white text-stone-700 ring-1 ring-inset ring-stone-200 hover:bg-stone-50;
+  }
+  .btn-link {
+    @apply btn p-0 text-stone-700 hover:text-stone-900 underline-offset-4 hover:underline;
+  }
+
+  .input {
+    @apply block w-full rounded-md border-0 bg-white px-3 py-1.5 text-sm text-stone-900 shadow-soft;
+    @apply ring-1 ring-inset ring-stone-200 placeholder:text-stone-400;
+    @apply focus:ring-2 focus:ring-inset focus:ring-stone-900;
+  }
+  .label {
+    @apply mb-1 block text-2xs font-medium uppercase tracking-wider text-stone-500;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-md bg-stone-100 px-2 py-0.5 text-2xs font-medium text-stone-700;
+  }
+  .chip-emerald {
+    @apply chip bg-emerald-50 text-emerald-700;
+  }
+  .chip-amber {
+    @apply chip bg-amber-50 text-amber-800;
+  }
+  .chip-rose {
+    @apply chip bg-rose-50 text-rose-700;
+  }
+
+  .dot {
+    @apply inline-block h-1.5 w-1.5 rounded-full;
+  }
+
+  .kbd {
+    @apply inline-flex h-5 items-center rounded border border-stone-200 bg-white px-1.5 text-2xs font-medium text-stone-500;
+  }
+
+  .table {
+    @apply w-full text-sm;
+  }
+  .table thead th {
+    @apply border-b border-stone-200 px-4 py-2 text-left text-2xs font-medium uppercase tracking-wider text-stone-500;
+  }
+  .table tbody td {
+    @apply border-b border-stone-100 px-4 py-3 align-top text-stone-800;
+  }
+  .table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .table tbody tr:hover {
+    @apply bg-stone-50/60;
+  }
+}

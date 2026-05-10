@@ -1,0 +1,15 @@
+{
+  "name": "identus-identity-portal-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Hyperledger Identus Identity Portal — POC monorepo. The portal app and the framework-agnostic SSI core live here as workspaces; cloned reference repos sit in repos/.",
+  "workspaces": [
+    "app",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm --workspace app run dev",
+    "build": "npm --workspaces --if-present run build",
+    "typecheck": "npm --workspaces --if-present run typecheck"
+  }
+}
