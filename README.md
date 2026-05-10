@@ -23,22 +23,22 @@ Create PRISM DIDs with an optional alias. Each DID appears in a table with its s
 ### Connections (DIDComm v2)
 Bootstrap peer connections using **Out-of-Band invitations**. Generate an OOB URL (renders as a QR code for mobile wallet scanning) or accept an inbound invitation from another agent.
 
-![Connections Page](screenshots/connections.png)
+![Connections Page](screenshots/credentials.png)
 
 ### Credentials
 Issue JWT, SD-JWT, AnonCreds, or W3C-LD verifiable credentials. Credentials are stored in the agent and can be presented over DIDComm.
 
-![Credentials Page](screenshots/credentials.png)
+![Credentials Page](screenshots/verify.png)
 
 ### Verification
 Submit a credential presentation (JWT VP or SD-JWT) for verification. Specify the verifier DID and required claims — the agent checks the signature and temporal validity.
 
-![Verify Page](screenshots/verify.png)
+![Verify Page](screenshots/settings.png)
 
 ### Settings — Edge / Cloud Toggle
 Switch between **Edge mode** (offline-first, browser-only, SDK runs in WASM) and **Cloud mode** (connected to a Cloud Agent REST API). The endpoint persists in `localStorage`.
 
-![Settings — Edge Mode](screenshots/settings.png)
+![Settings — Edge Mode]()
 
 ![Settings — Cloud Mode](screenshots/settings-cloud.png)
 
